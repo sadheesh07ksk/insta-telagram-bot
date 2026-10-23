@@ -362,10 +362,13 @@ async def main():
 
     print("✅ Bot is running...")
 
-    async with telegram_app:
+        async with telegram_app:
         await telegram_app.initialize()
         await telegram_app.start()
-        await telegram_app.updater.start_polling()
+        await telegram_app.updater.start_polling(
+            drop_pending_updates=True,
+            allowed_updates=Update.ALL_TYPES
+        )
         while True:
             await asyncio.sleep(3600)
 
