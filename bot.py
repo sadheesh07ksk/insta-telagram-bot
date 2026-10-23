@@ -303,17 +303,30 @@ async def run_download(chat_id, username, choice, context):
 
 
 # ── Start both Flask + Bot together ──────────────────────────
+import asyncio
+
+async def main():
+    telegram_app = ApplicationBuilder().token(BOT_TOKEN).build()
+    telegram_app.add_handler(CommandHandler("start", start))
+    telegram_app.add_handler(CallbackQueryHandler(handle_choice))
+    telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_username))
+
+    print("✅ Bot is running...")
+
+    async with telegram_app:
+        await telegram_app.initialize()
+        await telegram_app.start()
+        await telegram_app.updater.start_polling()
+
+        # Keep running forever
+        while True:
+            await asyncio.sleep(3600)
+
 if __name__ == "__main__":
     # Flask runs in background thread
     t = threading.Thread(target=run_flask)
     t.daemon = True
     t.start()
 
-    # Bot runs in main thread
-telegram_app = ApplicationBuilder().token(BOT_TOKEN).build()
-telegram_app.add_handler(CommandHandler("start", start))
-telegram_app.add_handler(CallbackQueryHandler(handle_choice))
-telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_username))
-
-print("✅ Bot is running...")
-telegram_app.run_polling()
+    # Bot runs with proper event loop
+    asyncio.run(main())
