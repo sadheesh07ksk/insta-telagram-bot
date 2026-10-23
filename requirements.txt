@@ -1,3 +1,4 @@
-instaloader
+git+https://github.com/instaloader/instaloader.git
 python-telegram-bot==21.5
 flask
+requests
