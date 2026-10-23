@@ -310,10 +310,10 @@ if __name__ == "__main__":
     t.start()
 
     # Bot runs in main thread
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("start", start))
-    app.add_handler(CallbackQueryHandler(handle_choice))
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_username))
+telegram_app = ApplicationBuilder().token(BOT_TOKEN).build()
+telegram_app.add_handler(CommandHandler("start", start))
+telegram_app.add_handler(CallbackQueryHandler(handle_choice))
+telegram_app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_username))
 
-    print("✅ Bot is running...")
-    app.run_polling()
+print("✅ Bot is running...")
+telegram_app.run_polling()
